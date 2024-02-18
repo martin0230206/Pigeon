@@ -1,0 +1,9 @@
+{
+    "mail_server": {
+        "smtp_server": "",
+        "smtp_port": 587,
+        "email_from": "",
+        "sender_email": "",
+        "sender_password": ""
+    }
+}
