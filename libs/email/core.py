@@ -1,12 +1,20 @@
 import smtplib
+from email import encoders
+from email.header import Header
+from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from io import BytesIO
+from typing import Dict
 
 from ..config import CONFIG
 from .schema import EmailPayload
 
 
-def send_email(email_payload: EmailPayload):
+def send_email(
+    email_payload: EmailPayload,
+    attachment_dict: Dict[str, BytesIO] = None
+):
     # 設置SMTP服務器
     smtp_setting = CONFIG.mail_server
     smtp_server = smtp_setting.smtp_server
@@ -23,13 +31,21 @@ def send_email(email_payload: EmailPayload):
 
     # 如果有CC，設置CC字段
     if email_payload.CC_list:
-        msg['BCC'] = ', '.join(email_payload.CC_list)
-        # email_payload.recipient_list += email_payload.CC_list
+        msg['CC'] = ', '.join(email_payload.CC_list)
 
     # 將HTML內容轉換爲MIMEText對象
     html_part = MIMEText(email_payload.html_content, 'html')
     # 將HTML部分添加到消息中
     msg.attach(html_part)
+
+    for filename, attachment in attachment_dict.items():
+        part = MIMEBase('application', 'octet-stream')
+        part.set_payload(attachment)
+        encoders.encode_base64(part)
+        encoded_filename = Header(filename, 'utf-8').encode()  # 編碼中文文件名
+        part.add_header('Content-Disposition',
+                        f"attachment; filename = {encoded_filename}")
+        msg.attach(part)
 
     try:
         # 連接SMTP服務器併發送郵件
