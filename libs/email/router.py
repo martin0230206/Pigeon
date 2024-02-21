@@ -1,9 +1,11 @@
-from pathlib import Path
 from typing import List
 
 from fastapi import APIRouter, Body, File, HTTPException, UploadFile, status
-from fastapi.responses import JSONResponse
 from hurry import filesize
+from redis import Redis
+from rq import Queue
+
+from libs.config import CONFIG
 
 from .core import send_email
 from .schema import ATTACHMENT_MAX_TOTAL_SIZE, EmailPayload
@@ -33,7 +35,13 @@ async def post_email(
         upload_file.file.read()
         for upload_file in upload_file_list
     ]
-    send_email(
+
+    queue = Queue(
+        name=CONFIG.queue.queue_name,
+        connection=Redis(CONFIG.redis.host, CONFIG.redis.port),
+    )
+    queue.enqueue(
+        send_email,
         email_payload,
-        dict(zip(attachment_filename_list, attachment_list)),
+        dict(zip(attachment_filename_list, attachment_list))
     )
