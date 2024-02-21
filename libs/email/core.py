@@ -47,25 +47,12 @@ def send_email(
                         f"attachment; filename = {encoded_filename}")
         msg.attach(part)
 
-    try:
-        # 連接SMTP服務器併發送郵件
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()  # 如果使用SSL，請省略此行
-            server.login(sender_email, sender_password)
-            server.sendmail(
-                sender_email,
-                email_payload.recipient_list,
-                msg.as_string()
-            )
-    except smtplib.SMTPConnectError as e:
-        print('郵件發送失敗，連接失敗：', e.smtp_code, e.smtp_error)
-    except smtplib.SMTPAuthenticationError as e:
-        print('郵件發送失敗，認證錯誤：', e.smtp_code, e.smtp_error)
-    except smtplib.SMTPSenderRefused as e:
-        print('郵件發送失敗，發件人被拒絕：', e.smtp_code, e.smtp_error)
-    except smtplib.SMTPRecipientsRefused as e:
-        print('郵件發送失敗，收件人被拒絕：', e.smtp_code, e.smtp_error)
-    except smtplib.SMTPDataError as e:
-        print('郵件發送失敗，數據接收拒絕：', e.smtp_code, e.smtp_error)
-    except smtplib.SMTPException as e:
-        print('郵件發送失敗, ', e.message)
+    # 連接SMTP服務器併發送郵件
+    with smtplib.SMTP(smtp_server, smtp_port) as server:
+        server.starttls()  # 如果使用SSL，請省略此行
+        server.login(sender_email, sender_password)
+        server.sendmail(
+            sender_email,
+            email_payload.recipient_list,
+            msg.as_string()
+        )

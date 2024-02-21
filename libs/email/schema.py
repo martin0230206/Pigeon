@@ -13,7 +13,7 @@ class EmailPayload(BaseModel):
     """主旨"""
     html_content: str = Field(..., description="HTML內容")
     """HTML內容"""
-    CC_list: List[str] = Field(None, description="抄送人列表")
+    CC_list: List[str] = Field([], description="抄送人列表")
     """抄送人列表"""
 
     @model_validator(mode='before')

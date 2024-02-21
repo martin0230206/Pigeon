@@ -34,11 +34,22 @@ class MailServer(BaseModel):
     sender_password: str
 
 
+class Redis(BaseModel):
+    host: str
+    port: int
+
+
+class Queue(BaseModel):
+    queue_name: str
+
+
 class Config(BaseModel):
     """ 設定
     """
     mysql: Mysql = None
     mail_server: MailServer = None
+    redis: Redis = None
+    queue: Queue = None
 
 
 CONFIG: Config = Config.model_validate_json(
