@@ -3,6 +3,7 @@ from typing import List
 
 from fastapi import APIRouter, Body, File, HTTPException, UploadFile, status
 from fastapi.responses import JSONResponse
+from hurry import filesize
 
 from .core import send_email
 from .schema import ATTACHMENT_MAX_TOTAL_SIZE, EmailPayload
@@ -21,7 +22,7 @@ async def post_email(
     if sum(upload_file.size for upload_file in upload_file_list) > ATTACHMENT_MAX_TOTAL_SIZE:
         raise HTTPException(
             status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            detail="附加檔案總大小不可超過25MB"
+            detail=f"附加檔案總大小不可超過{filesize.size(ATTACHMENT_MAX_TOTAL_SIZE)}"
         )
 
     attachment_filename_list = [
