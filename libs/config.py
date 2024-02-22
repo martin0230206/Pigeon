@@ -43,6 +43,10 @@ class Queue(BaseModel):
     queue_name: str
 
 
+class Sentry(BaseModel):
+    dsn: str
+
+
 class Config(BaseModel):
     """ 設定
     """
@@ -50,6 +54,7 @@ class Config(BaseModel):
     mail_server: MailServer = None
     redis: Redis = None
     queue: Queue = None
+    sentry: Sentry = None
 
 
 CONFIG: Config = Config.model_validate_json(
