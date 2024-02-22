@@ -5,5 +5,15 @@
         "email_from": "",
         "sender_email": "",
         "sender_password": ""
+    },
+    "redis": {
+        "host": "",
+        "port": 6379
+    },
+    "queue": {
+        "queue_name": ""
+    },
+    "sentry": {
+        "dsn": ""
     }
 }
