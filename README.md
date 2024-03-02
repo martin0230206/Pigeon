@@ -1,4 +1,4 @@
-# sender
+# Pigeon
 
 ### Project setup
 #### Environment
