@@ -12,7 +12,7 @@ pip install -r requirements txt
 ```
 cd /www/sender
 source .venv/bin/activate
-uvicorn main:app --port 24048
+uvicorn main:app --host 0.0.0.0 --port 24048
 ```
 #### RQ-Dashboard
 ```
