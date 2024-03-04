@@ -5,7 +5,7 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from io import BytesIO
-from typing import Dict
+from typing import Dict, Optional
 
 from ..config import CONFIG
 from .schema import EmailPayload
@@ -13,19 +13,18 @@ from .schema import EmailPayload
 
 def send_email(
     email_payload: EmailPayload,
-    attachment_dict: Dict[str, BytesIO] = None
+    attachment_dict: Optional[Dict[str, BytesIO]] = None
 ):
     # 設置SMTP服務器
-    smtp_setting = CONFIG.mail_server
-    smtp_server = smtp_setting.smtp_server
-    smtp_port = smtp_setting.smtp_port
-    sender_email_name = smtp_setting.email_from
-    sender_email = smtp_setting.sender_email
-    sender_password = smtp_setting.sender_password
+    smtp_server = CONFIG.mail_server.smtp_server
+    smtp_port = CONFIG.mail_server.smtp_port
+    sender_email_from = CONFIG.mail_server.email_from
+    sender_email = CONFIG.mail_server.sender_email
+    sender_password = CONFIG.mail_server.sender_password
 
     # 創建MIMEMultipart對象以構建郵件
     msg = MIMEMultipart('alternative')
-    msg['From'] = sender_email_name
+    msg['From'] = sender_email_from
     msg['To'] = ', '.join(email_payload.recipient_list)
     msg['Subject'] = email_payload.subject
 
