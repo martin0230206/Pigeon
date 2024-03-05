@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Body, File, HTTPException, UploadFile, status
+from fastapi import APIRouter, Body, File, HTTPException, Request, UploadFile, status
 from hurry import filesize
 from redis import Redis
 from rq import Queue
@@ -20,6 +20,7 @@ router = APIRouter()
 async def post_email(
     email_payload: EmailPayload = Body(...),
     upload_file_list: List[UploadFile] = File(None, description="附加檔案"),
+    request: Request = None
 ):
     if sum(upload_file.size for upload_file in upload_file_list) > ATTACHMENT_MAX_TOTAL_SIZE:
         raise HTTPException(
