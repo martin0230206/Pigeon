@@ -1,6 +1,5 @@
-from pathlib import Path
-
 from pydantic import BaseModel
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Mysql(BaseModel):
@@ -47,9 +46,16 @@ class Sentry(BaseModel):
     dsn: str
 
 
-class Config(BaseModel):
+class Config(BaseSettings):
     """ 設定
     """
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        env_nested_delimiter="__",
+        extra="ignore",
+    )
+
     mysql: Mysql = None
     mail_server: MailServer = None
     redis: Redis = None
@@ -57,7 +63,4 @@ class Config(BaseModel):
     sentry: Sentry = None
 
 
-CONFIG: Config = Config.model_validate_json(
-    (Path(__file__).parent.parent / "config.json")
-    .read_text()
-)
+CONFIG = Config()
