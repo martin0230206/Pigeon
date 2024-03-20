@@ -7,7 +7,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
-from libs import email
+from libs import email_sender
 from libs.config import CONFIG
 
 sentry_sdk.init(
@@ -73,7 +73,7 @@ async def http_middleware(request: Request, call_next):
 
 
 app.include_router(
-    email.router,
+    email_sender.router,
     prefix="/Email",
     tags=["電子郵件"]
 )
