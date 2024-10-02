@@ -3,7 +3,8 @@ from typing import List
 
 from pydantic import BaseModel, Field, model_validator
 
-ATTACHMENT_MAX_TOTAL_SIZE = 25 * 1024 * 1024  # 25MB
+ATTACHMENT_MAX_TOTAL_SIZE = 25 * 1024 * 1024
+"""附加檔案總大小限制為25MB以下"""
 
 
 class EmailPayload(BaseModel):
