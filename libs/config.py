@@ -11,14 +11,22 @@ class Mysql(BaseModel):
     @property
     def connections(self) -> dict:
         return {
-            "default": {
-                "engine": "tortoise.backends.mysql",
-                "credentials": {
-                    "user": self.username,
-                    "password": self.password,
-                    "host": self.host,
-                    "port": self.port,
-                    "database": None,
+            "connections": {
+                "default": {
+                    "engine": "tortoise.backends.mysql",
+                    "credentials": {
+                        "user": self.username,
+                        "password": self.password,
+                        "host": self.host,
+                        "port": self.port,
+                        "database": None,
+                    }
+                }
+            },
+            'apps': {
+                'my_app': {
+                    'models': ['models'],
+                    'default_connection': 'default',
                 }
             }
         }

@@ -6,6 +6,7 @@ import sentry_sdk
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
+from tortoise import Tortoise
 
 from libs import email_sender
 from libs.config import CONFIG
@@ -26,11 +27,13 @@ sentry_sdk.init(
 async def lifespan(app: FastAPI):
     # region 啟動時執行
     logger.info('API docs 請造訪: http://127.0.0.1:24048/docs ')
+
+    await Tortoise.init(CONFIG.mysql.connections)
     # endregion
 
     yield
     # region 終止時執行
-    ...
+    await Tortoise.close_connections()
     # endregion
 
 # 建立 app 實例
